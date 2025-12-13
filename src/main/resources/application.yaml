@@ -1,6 +1,10 @@
 spring:
   application:
     name: git.demo
+  config:
+    import: optional:file:.env[.properties]
 
-git:
-  access_token: ${ACCESS_TOKEN}
+github:
+  api:
+    url: https://api.github.com
+    token: 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
