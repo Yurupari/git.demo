@@ -3,7 +3,7 @@ package com.redcare.git.demo.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redcare.git.demo.dto.GitPopularityRequest;
 import com.redcare.git.demo.dto.GitRepositoriesResponse;
-import com.redcare.git.demo.enums.QueryParameterEnum;
+import com.redcare.git.demo.enums.ParameterEnum;
 import com.redcare.git.demo.exception.GitDataParseException;
 import com.redcare.git.demo.feign.GitHubFeignClient;
 import org.junit.jupiter.api.Test;
@@ -45,8 +45,8 @@ class GitHubServiceImplTests {
 
         var request = new GitPopularityRequest(
                 Map.of(
-                        QueryParameterEnum.LANGUAGE, "java",
-                        QueryParameterEnum.CREATED, "2025-11-28"
+                        ParameterEnum.LANGUAGE, "java",
+                        ParameterEnum.CREATED_AT, "2025-11-28"
                 ),
                 5,
                 1
@@ -81,8 +81,8 @@ class GitHubServiceImplTests {
 
         var request = new GitPopularityRequest(
                 Map.of(
-                        QueryParameterEnum.LANGUAGE, "java",
-                        QueryParameterEnum.CREATED, "2025-11-28"
+                        ParameterEnum.LANGUAGE, "java",
+                        ParameterEnum.CREATED_AT, "2025-11-28"
                 ),
                 5,
                 1

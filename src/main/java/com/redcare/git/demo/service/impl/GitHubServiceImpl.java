@@ -2,14 +2,14 @@ package com.redcare.git.demo.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.redcare.git.demo.config.GitHubProperties;
 import com.redcare.git.demo.dto.GitPopularityRequest;
 import com.redcare.git.demo.dto.GitPopularityResponse;
-import com.redcare.git.demo.enums.QueryParameterEnum;
+import com.redcare.git.demo.enums.ParameterEnum;
 import com.redcare.git.demo.exception.GitDataParseException;
 import com.redcare.git.demo.feign.GitHubFeignClient;
 import com.redcare.git.demo.service.GitHubService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,15 +25,7 @@ import java.util.stream.Collectors;
 public class GitHubServiceImpl implements GitHubService {
 
     private final GitHubFeignClient gitHubFeignClient;
-
-    @Value("${github.weights.stars}")
-    private double STARS_WEIGHT;
-
-    @Value("${github.weights.forks}")
-    private double FORKS_WEIGHT;
-
-    @Value("${github.weights.days_since_update}")
-    private double DAYS_SINCE_UPDATE_WEIGHT;
+    private final GitHubProperties gitHubProperties;
 
     @Override
     public GitPopularityResponse calculatePopularityScore(GitPopularityRequest gitPopularityRequest) {
@@ -64,7 +56,7 @@ public class GitHubServiceImpl implements GitHubService {
                 .orElse(null);
     }
 
-    private String formatQuery(Map<QueryParameterEnum, String> queryParameters) {
+    private String formatQuery(Map<ParameterEnum, String> queryParameters) {
         return queryParameters.entrySet().stream()
                 .filter(entry -> entry.getValue() != null && !entry.getValue().isBlank())
                 .map(entry -> {
@@ -72,7 +64,7 @@ public class GitHubServiceImpl implements GitHubService {
                     var parameterValue = entry.getValue();
 
                     return switch (parameter) {
-                        case CREATED, UPDATED -> String.format("%s:>%s", parameter.getValue(), parameterValue);
+                        case CREATED_AT, UPDATED_AT -> String.format("%s:>%s", parameter.getValue(), parameterValue);
                         default -> String.format("%s:%s", parameter.getValue(), parameterValue);
                     };
                 })
@@ -80,19 +72,25 @@ public class GitHubServiceImpl implements GitHubService {
     }
 
     private BigDecimal calculatePopularity(JsonNode item) {
-        var stars = item.has("stargazers_count") ? item.get("stargazers_count").asInt() : 0;
-        var forks = item.has("forks_count") ? item.get("forks_count").asInt() : 0;
+        final double[] popularityScore = {0.0};
 
-        long daysSinceUpdate = 0;
-        if (item.has("updated_at") && !item.get("updated_at").isNull()) {
-            try {
-                Instant updatedAt = Instant.parse(item.get("updated_at").asText());
-                daysSinceUpdate = Duration.between(updatedAt, Instant.now()).toDays();
-            } catch (DateTimeParseException e) {
-                throw new GitDataParseException("Failed to parse date from GitHub API");
+        gitHubProperties.getWeights().forEach((key, value) -> {
+            if (item.has(key)) {
+                switch (ParameterEnum.fromValue(key)) {
+                    case CREATED_AT, UPDATED_AT -> {
+                        try {
+                            Instant instant = Instant.parse(item.get(key).asText());
+                            var daysSince = Duration.between(instant, Instant.now()).toDays();
+                            popularityScore[0] += daysSince * value;
+                        } catch (DateTimeParseException e) {
+                            throw new GitDataParseException("Failed to parse date from GitHub API");
+                        }
+                    }
+                    default -> popularityScore[0] += item.get(key).asInt() * value;
+                }
             }
-        }
+        });
 
-        return BigDecimal.valueOf(stars * STARS_WEIGHT + forks * FORKS_WEIGHT - daysSinceUpdate * DAYS_SINCE_UPDATE_WEIGHT);
+        return BigDecimal.valueOf(popularityScore[0]);
     }
 }

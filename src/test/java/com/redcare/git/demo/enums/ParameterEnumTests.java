@@ -8,18 +8,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-class QueryParameterEnumTests {
+class ParameterEnumTests {
 
     @Test
     void testFromValue() {
-        var response = QueryParameterEnum.fromValue("language");
+        var response = ParameterEnum.fromValue("language");
 
         assertNotNull(response);
-        assertEquals(QueryParameterEnum.LANGUAGE, response);
+        assertEquals(ParameterEnum.LANGUAGE, response);
     }
 
     @Test
     void testFromValue_UnknownValue() {
-        assertThrows(IllegalArgumentException.class, () -> QueryParameterEnum.fromValue("unknown"));
+        assertThrows(IllegalArgumentException.class, () -> ParameterEnum.fromValue("unknown"));
     }
 }
