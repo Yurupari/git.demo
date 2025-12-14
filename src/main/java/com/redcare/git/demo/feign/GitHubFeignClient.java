@@ -1,7 +1,7 @@
 package com.redcare.git.demo.feign;
 
 import com.redcare.git.demo.config.GitHubFeignConfig;
-import com.redcare.git.demo.dto.GitSearchResponse;
+import com.redcare.git.demo.dto.GitRepositoriesResponse;
 import com.redcare.git.demo.feign.fallback.GitHubFeignClientFallBack;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface GitHubFeignClient {
 
     @GetMapping("/search/repositories")
-    GitSearchResponse searchRepositories(
+    GitRepositoriesResponse searchRepositories(
             @RequestParam("q") String q,
             @RequestParam(name = "sort", required = false) String sort,
             @RequestParam(name = "order", required = false) String order,

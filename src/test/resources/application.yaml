@@ -1,0 +1,9 @@
+github:
+  api:
+    url: http://localhost:8080
+    token: test-token
+    template: 2022-11-28
+  weights:
+    stars: 1.5
+    forks: 2.0
+    days_since_update: 0.1

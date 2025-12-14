@@ -4,9 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.redcare.git.demo.dto.GitPopularityRequest;
 import com.redcare.git.demo.dto.GitPopularityResponse;
-import com.redcare.git.demo.dto.GitSearchRequest;
-import com.redcare.git.demo.dto.GitSearchResponse;
 import com.redcare.git.demo.enums.QueryParameterEnum;
+import com.redcare.git.demo.exception.GitDataParseException;
 import com.redcare.git.demo.feign.GitHubFeignClient;
 import com.redcare.git.demo.service.GitHubService;
 import lombok.RequiredArgsConstructor;
@@ -37,18 +36,7 @@ public class GitHubServiceImpl implements GitHubService {
     private double DAYS_SINCE_UPDATE_WEIGHT;
 
     @Override
-    public GitSearchResponse searchRepositories(GitSearchRequest gitSearchRequest) {
-        return gitHubFeignClient.searchRepositories(
-                gitSearchRequest.query(),
-                gitSearchRequest.sort(),
-                gitSearchRequest.order(),
-                gitSearchRequest.perPage(),
-                gitSearchRequest.page()
-        );
-    }
-
-    @Override
-    public GitPopularityResponse getPopularityScore(GitPopularityRequest gitPopularityRequest) {
+    public GitPopularityResponse calculatePopularityScore(GitPopularityRequest gitPopularityRequest) {
         var gitSearchResponse = gitHubFeignClient.searchRepositories(
                 formatQuery(gitPopularityRequest.parameters()),
                 null,
@@ -93,18 +81,18 @@ public class GitHubServiceImpl implements GitHubService {
 
     private BigDecimal calculatePopularity(JsonNode item) {
         var stars = item.has("stargazers_count") ? item.get("stargazers_count").asInt() : 0;
-        var forks = item.has("forks") ? item.get("forks").asInt() : 0;
+        var forks = item.has("forks_count") ? item.get("forks_count").asInt() : 0;
 
         long daysSinceUpdate = 0;
-        if (item.has("updated_at")) {
+        if (item.has("updated_at") && !item.get("updated_at").isNull()) {
             try {
                 Instant updatedAt = Instant.parse(item.get("updated_at").asText());
                 daysSinceUpdate = Duration.between(updatedAt, Instant.now()).toDays();
             } catch (DateTimeParseException e) {
-                daysSinceUpdate = Long.MAX_VALUE;
+                throw new GitDataParseException("Failed to parse date from GitHub API");
             }
         }
 
-        return BigDecimal.valueOf(stars * STARS_WEIGHT + forks * FORKS_WEIGHT - (daysSinceUpdate / DAYS_SINCE_UPDATE_WEIGHT));
+        return BigDecimal.valueOf(stars * STARS_WEIGHT + forks * FORKS_WEIGHT - daysSinceUpdate * DAYS_SINCE_UPDATE_WEIGHT);
     }
 }
