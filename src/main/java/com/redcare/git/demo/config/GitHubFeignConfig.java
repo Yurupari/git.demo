@@ -11,12 +11,15 @@ public class GitHubFeignConfig {
     @Value("${github.api.token}")
     private String githubToken;
 
+    @Value("${github.api.template}")
+    private String template;
+
     @Bean
     public RequestInterceptor requestInterceptor() {
         return requestTemplate -> {
             requestTemplate.header("Authorization", "Bearer " + githubToken);
             requestTemplate.header("Accept", "application/vnd.github+json");
-            requestTemplate.header("X-GitHub-Api-Version", "2022-11-28");
+            requestTemplate.header("X-GitHub-Api-Version", template);
         };
     }
 }
