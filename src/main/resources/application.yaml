@@ -1,3 +1,6 @@
 spring:
   application:
     name: git.demo
+
+git:
+  access_token: ${ACCESS_TOKEN}
