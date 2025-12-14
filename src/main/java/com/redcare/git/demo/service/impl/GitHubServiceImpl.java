@@ -64,7 +64,7 @@ public class GitHubServiceImpl implements GitHubService {
                     var parameterValue = entry.getValue();
 
                     return switch (parameter) {
-                        case CREATED_AT, UPDATED_AT -> String.format("%s:>%s", parameter.getValue(), parameterValue);
+                        case CREATED_AT, UPDATED_AT -> String.format("%s:>%s", parameter.getValue().replace("_at", ""), parameterValue);
                         default -> String.format("%s:%s", parameter.getValue(), parameterValue);
                     };
                 })
