@@ -45,3 +45,7 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+tasks.bootJar {
+    archiveFileName.set("${project.name}.jar")
+}

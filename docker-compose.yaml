@@ -1,0 +1,16 @@
+version: '3'
+services:
+  git-demo:
+    build:
+      context: .
+      dockerfile: ./src/main/docker/Dockerfile
+    container_name: git-demo
+    environment:
+      - GIT_URL
+      - GIT_TEMPLATE
+      - GIT_ACCESS_TOKEN
+    volumes:
+      - ./logs/:/logs
+    ports:
+      - "8080:8080"
+      - "8085:8085"
