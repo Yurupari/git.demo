@@ -12,7 +12,8 @@ public enum ParameterEnum {
     CREATED_AT("created_at"),
     UPDATED_AT("updated_at"),
     STARGAZERS_COUNT("stargazers_count"),
-    FORKS_COUNT("forks_count");
+    FORKS_COUNT("forks_count"),
+    POPULARITY_SCORE("popularity_score");
 
     private final String value;
 

@@ -42,16 +42,16 @@ public class GitHubServiceImpl implements GitHubService {
                     var itemsWithScore = response.items().stream()
                             .map(item -> {
                                 var objectNode = (ObjectNode) item;
-                                objectNode.put("popularity_score", calculatePopularity(item));
+                                objectNode.put(ParameterEnum.POPULARITY_SCORE.getValue(), calculatePopularity(item));
                                 return objectNode;
                             })
                             .toList();
 
-                    return GitPopularityResponse.builder()
-                            .totalCount(response.totalCount())
-                            .incompleteResults(response.incompleteResults())
-                            .items(itemsWithScore)
-                            .build();
+                    return new GitPopularityResponse(
+                            response.totalCount(),
+                            response.incompleteResults(),
+                            itemsWithScore
+                    );
                 })
                 .orElse(null);
     }

@@ -53,11 +53,11 @@ class GitV1ControllerTests {
 
         assertEquals(200, response.getStatusCode().value());
         assertNotNull(response.getBody());
-        assertNotNull(response.getBody().getItems());
-        assertEquals(5, response.getBody().getItems().size());
-        response.getBody().getItems().forEach(item -> {
-            assertTrue(item.has("popularity_score"));
-            assertNotNull(item.get("popularity_score"));
+        assertNotNull(response.getBody().items());
+        assertEquals(5, response.getBody().items().size());
+        response.getBody().items().forEach(item -> {
+            assertTrue(item.has(ParameterEnum.POPULARITY_SCORE.getValue()));
+            assertNotNull(item.get(ParameterEnum.POPULARITY_SCORE.getValue()));
         });
     }
 }
