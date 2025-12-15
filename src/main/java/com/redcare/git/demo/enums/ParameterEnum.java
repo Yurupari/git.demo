@@ -21,6 +21,6 @@ public enum ParameterEnum {
         return Arrays.stream(ParameterEnum.values())
                 .filter(enumValue -> enumValue.getValue().equalsIgnoreCase(value))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Unknown query parameter: " + value));
+                .orElseThrow(() -> new IllegalArgumentException("Unknown query parameter for ParameterEnum: " + value));
     }
 }
