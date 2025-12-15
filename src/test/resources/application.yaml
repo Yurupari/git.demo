@@ -1,3 +1,7 @@
+spring:
+  cache:
+    type: none
+
 github:
   api:
     url: http://localhost:8080

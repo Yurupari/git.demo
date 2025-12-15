@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Map;
@@ -65,10 +66,10 @@ class GitHubServiceImplTests {
 
             var popularityScores = Arrays.asList(493.2, 192.0, 183.0, 172.0, 172.0);
             response.items().forEach(item -> {
-                assertTrue(item.has(ParameterEnum.POPULARITY_SCORE.getValue()));
+                assertTrue(item.containsKey(ParameterEnum.POPULARITY_SCORE.getValue()));
                 var popularityScore = item.get(ParameterEnum.POPULARITY_SCORE.getValue());
                 assertNotNull(popularityScore);
-                assertTrue(popularityScores.contains(popularityScore.asDouble()));
+                assertTrue(popularityScores.contains(((BigDecimal) popularityScore).doubleValue()));
             });
         }
     }

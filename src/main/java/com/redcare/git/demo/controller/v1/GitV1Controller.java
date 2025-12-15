@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/git/v1")
 public class GitV1Controller {
@@ -26,6 +29,8 @@ public class GitV1Controller {
     })
     @PostMapping("/popularity/score")
     public ResponseEntity<GitPopularityResponse> calculatePopularityScore(@RequestBody GitPopularityRequest gitPopularityRequest) {
-        return ResponseEntity.ok(gitHubService.calculatePopularityScore(gitPopularityRequest));
+        return Optional.ofNullable(gitHubService.calculatePopularityScore(gitPopularityRequest))
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.ok(new GitPopularityResponse(0, false, Collections.emptyList())));
     }
 }
