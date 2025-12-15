@@ -104,6 +104,7 @@ The application provides an interactive API documentation through Swagger UI. On
    * NOTE: If you're running on a local machine instead of a server, you can use a personalized configuration through the `docker-compose-local.yaml` file and execute the following command:
      ```
      docker-compose -f docker-compose-local.yaml up -d
+   * **Debug Port**: The application exposes a debug port at `8085` for remote debugging.
 
 ## Testing
 To run the tests and generate a coverage report, execute the following command:
