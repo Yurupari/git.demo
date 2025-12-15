@@ -89,7 +89,8 @@ The application provides an interactive API documentation through Swagger UI. On
 6. Enter the repository folder, and build the project using the following command:
    ```
    ./gradlew build
-7. Run the application with Docker using the following command:
+7. Add into the `.env` file the values of the environment variables. Check the [GitHub API](https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#search-repositories) for the endpoint and template header (`GIT_URL` and `GIT_TEMPLATE`). As for the token, follow the `GIT_ACCESS_TOKEN` follow this [link instructions](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token) to generate it.
+8. Run the application with Docker using the following command:
    ```
    docker-compose up -d
    ```
