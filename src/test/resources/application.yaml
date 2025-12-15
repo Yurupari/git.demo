@@ -1,6 +1,9 @@
 spring:
   cache:
     type: none
+  data:
+    redis:
+      time_in_minutes: 2
 
 github:
   api:
