@@ -11,6 +11,13 @@ This project follows a monolithic architecture and is built using the following 
 - **Docker**
 - **H2 Database** (for local development)
 - **OpenFeign** (for declarative REST API communication)
+- **Redis** (for API response caching)
+
+### Caching with Redis
+To enhance performance and reduce redundant calls to the GitHub API, the application utilizes Redis for caching.
+- **Integration**: Spring's caching abstraction is enabled with `@EnableCaching`, and the `calculatePopularityScore` method is annotated with `@Cacheable("popularity-scores")` to cache its results.
+- **Configuration**: Redis connection details are configured in `application.yaml`, and a custom `RedisCacheConfiguration` ensures proper JSON serialization of cached objects.
+- **Local Development**: A Redis service is included in `docker-compose.yaml` and `docker-compose-local.yaml`, allowing for easy local setup and testing of the caching mechanism.
 
 ## API Documentation
 The application exposes the following endpoints:
