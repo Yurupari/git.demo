@@ -56,7 +56,7 @@ class GitV1ControllerTests {
         assertNotNull(response.getBody().items());
         assertEquals(5, response.getBody().items().size());
         response.getBody().items().forEach(item -> {
-            assertTrue(item.has(ParameterEnum.POPULARITY_SCORE.getValue()));
+            assertTrue(item.containsKey(ParameterEnum.POPULARITY_SCORE.getValue()));
             assertNotNull(item.get(ParameterEnum.POPULARITY_SCORE.getValue()));
         });
     }

@@ -6,6 +6,12 @@ spring:
     name: git.demo
   config:
     import: optional:file:.env[.properties]
+  cache:
+    type: redis
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
 
 github:
   api:

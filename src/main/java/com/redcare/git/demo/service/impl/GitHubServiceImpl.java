@@ -9,7 +9,9 @@ import com.redcare.git.demo.enums.ParameterEnum;
 import com.redcare.git.demo.exception.GitDataParseException;
 import com.redcare.git.demo.feign.GitHubFeignClient;
 import com.redcare.git.demo.service.GitHubService;
+import com.redcare.git.demo.util.Utility;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,6 +31,7 @@ public class GitHubServiceImpl implements GitHubService {
     private final GitHubProperties gitHubProperties;
 
     @Override
+    @Cacheable("popularity-scores")
     public GitPopularityResponse calculatePopularityScore(GitPopularityRequest gitPopularityRequest) {
         var gitSearchResponse = gitHubFeignClient.searchRepositories(
                 formatQuery(gitPopularityRequest.parameters()),
@@ -42,9 +45,9 @@ public class GitHubServiceImpl implements GitHubService {
                 .map(response -> {
                     var itemsWithScore = response.items().stream()
                             .map(item -> {
-                                var objectNode = (ObjectNode) item;
-                                objectNode.put(ParameterEnum.POPULARITY_SCORE.getValue(), calculatePopularity(item));
-                                return objectNode;
+                                var mapNode = Utility.convertJsonNodeToMap(item);
+                                mapNode.put(ParameterEnum.POPULARITY_SCORE.getValue(), calculatePopularity(item));
+                                return mapNode;
                             })
                             .toList();
 
