@@ -15,8 +15,9 @@ services:
       - GIT_URL
       - GIT_TEMPLATE
       - GIT_ACCESS_TOKEN
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      - REDIS_HOST
+      - REDIS_PORT
+      - REDIS_TIME_IN_MINUTES
     volumes:
       - ./logs/:/logs
     ports:
