@@ -44,7 +44,9 @@ The `parameters` object can contain the following keys, from which the API will 
 The calculation of the popularity score is done using parameters set in the `application.yaml` file. For now only is done using the following parameters with its respective factor:
 - `stargazers_count`: 1.5
 - `forks_count`: 2.0
-- `updated_at`: -0.1
+- `updated_at`: 50.0
+
+For the first 2, it only checks the value of each item and multiply it by its respective weight, but for the last one, divide the weight by the number of days since updated plus 1.
 
 #### Response Body
 The response body will be a JSON object based on the structure of the [GitHub API response](https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#search-repositories), with an additional `popularity_score` parameter:
