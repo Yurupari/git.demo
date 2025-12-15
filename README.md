@@ -13,7 +13,7 @@ This project follows a monolithic architecture and is built using the following 
 - **OpenFeign** (for declarative REST API communication)
 
 ## API Documentation
-The application exposes the following endpoint:
+The application exposes the following endpoints:
 
 ### Health API Endpoint
 `http://localhost:8080/actuator/health`
@@ -70,6 +70,11 @@ The error response body will be a JSON object similar to this structure:
     "message": "JSON parse error: Cannot deserialize Map key of..."
 }
 ```
+
+## Swagger UI / OpenAPI
+The application provides an interactive API documentation through Swagger UI. Once the application is running, you can access it at:
+- **Swagger UI**: `http://localhost:8080/swagger-ui.html`
+- **OpenAPI Spec**: `http://localhost:8080/v3/api-docs`
 
 ## Deployment
 1. Download and install [Git](https://git-scm.com/install/).
