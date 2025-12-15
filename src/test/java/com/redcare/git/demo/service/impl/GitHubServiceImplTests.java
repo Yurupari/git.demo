@@ -63,7 +63,7 @@ class GitHubServiceImplTests {
             assertNotNull(response.items());
             assertEquals(5, response.items().size());
 
-            var popularityScores = Arrays.asList(476.3, 137.0, 131.5, 120.0, 161.6);
+            var popularityScores = Arrays.asList(493.2, 192.0, 183.0, 172.0, 172.0);
             response.items().forEach(item -> {
                 assertTrue(item.has(ParameterEnum.POPULARITY_SCORE.getValue()));
                 var popularityScore = item.get(ParameterEnum.POPULARITY_SCORE.getValue());

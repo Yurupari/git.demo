@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
@@ -81,16 +82,18 @@ public class GitHubServiceImpl implements GitHubService {
                         try {
                             Instant instant = Instant.parse(item.get(key).asText());
                             var daysSince = Duration.between(instant, Instant.now()).toDays();
-                            popularityScore[0] += daysSince * value;
+                            if (daysSince >= 0) {
+                                popularityScore[0] += value / (daysSince + 1.0);
+                            }
                         } catch (DateTimeParseException e) {
                             throw new GitDataParseException("Failed to parse date from GitHub API");
                         }
                     }
-                    default -> popularityScore[0] += item.get(key).asInt() * value;
+                    default -> popularityScore[0] += item.get(key).asDouble() * value;
                 }
             }
         });
 
-        return BigDecimal.valueOf(popularityScore[0]);
+        return BigDecimal.valueOf(popularityScore[0]).setScale(1, RoundingMode.HALF_UP);
     }
 }

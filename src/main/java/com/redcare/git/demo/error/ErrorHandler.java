@@ -3,7 +3,6 @@ package com.redcare.git.demo.error;
 import com.redcare.git.demo.dto.ErrorResponse;
 import com.redcare.git.demo.exception.GitDataParseException;
 import com.redcare.git.demo.exception.GitHubServiceException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
-@Slf4j
 public class ErrorHandler {
 
     @ExceptionHandler
