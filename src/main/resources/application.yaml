@@ -1,6 +1,18 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: git.demo
+  config:
+    import: optional:file:.env[.properties]
 
-git:
-  access_token: ${ACCESS_TOKEN}
+github:
+  api:
+    url: ${GIT_URL}
+    template: ${GIT_TEMPLATE}
+    token: ${GIT_ACCESS_TOKEN}
+  weights:
+    stargazers_count: 1.5
+    forks_count: 2.0
+    updated_at: 50

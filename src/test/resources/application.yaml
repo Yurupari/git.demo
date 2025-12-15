@@ -1,0 +1,9 @@
+github:
+  api:
+    url: http://localhost:8080
+    token: test-token
+    template: 2022-11-28
+  weights:
+    stargazers_count: 1.5
+    forks_count: 2.0
+    updated_at: 50

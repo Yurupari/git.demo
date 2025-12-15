@@ -1,7 +1,8 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.5.8"
-	id("io.spring.dependency-management") version "1.1.7"
+	id("org.springframework.boot") version "3.3.1"
+	id("io.spring.dependency-management") version "1.1.5"
+	id("jacoco")
 }
 
 group = "com.redcare"
@@ -30,11 +31,14 @@ dependencyManagement {
     }
 }
 
+val springdocVersion = "2.5.0"
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("com.h2database:h2")
 	annotationProcessor("org.projectlombok:lombok")
@@ -42,6 +46,27 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+jacoco {
+    toolVersion = "0.8.12"
+}
+
 tasks.withType<Test> {
 	useJUnitPlatform()
+	testLogging {
+		events("passed", "skipped", "failed")
+	}
+	finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.withType<JacocoReport> {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        csv.required.set(false)
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/html"))
+    }
+}
+
+tasks.bootJar {
+    archiveFileName.set("${project.name}.jar")
 }
